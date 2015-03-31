@@ -154,7 +154,8 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
             onTagAdded: '&',
             onInvalidTag: '&',
             onTagRemoving: '&',
-            onTagRemoved: '&'
+            onTagRemoved: '&',
+            onTagClicked: '&'
         },
         replace: false,
         transclude: true,
@@ -228,6 +229,12 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
                             return;
                         }
                         $scope.tagList.remove(index);
+                    },
+                    clickTag: function(tag) {
+                        if (!$scope.onTagClicked()) {
+                            return;
+                        }
+                        $scope.onTagClicked()(tag);
                     }
                 };
             };
