@@ -107,6 +107,11 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
             }
         };
 
+        self.click = function(index) {
+          var tag = self.items[index];
+          events.trigger('tag-clicked', { $tag: tag });
+        };
+
         self.select = function(index) {
             if (index < 0) {
                 index = self.items.length - 1;
@@ -230,11 +235,8 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
                         }
                         $scope.tagList.remove(index);
                     },
-                    clickTag: function(tag) {
-                        if (!$scope.onTagClicked()) {
-                            return;
-                        }
-                        $scope.onTagClicked()(tag);
+                    clickTag: function(index) {
+                      $scope.tagList.click(index);
                     }
                 };
             };
@@ -334,6 +336,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
                 .on('tag-added', scope.onTagAdded)
                 .on('invalid-tag', scope.onInvalidTag)
                 .on('tag-removed', scope.onTagRemoved)
+                .on('tag-clicked', scope.onTagClicked)
                 .on('tag-added', function() {
                     scope.newTag.setText('');
                 })
