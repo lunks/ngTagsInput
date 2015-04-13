@@ -5,7 +5,7 @@
  * Copyright (c) 2013-2015 Michael Benford
  * License: MIT
  *
- * Generated at 2015-04-01 13:01:46 -0300
+ * Generated at 2015-04-13 16:55:44 -0300
  */
 (function() {
 'use strict';
@@ -136,6 +136,11 @@ tagsInput.directive('tagsInput', ["$timeout", "$document", "$window", "tagsInput
             }
         };
 
+        self.click = function(index) {
+          var tag = self.items[index];
+          events.trigger('tag-clicked', { $tag: tag });
+        };
+
         self.select = function(index) {
             if (index < 0) {
                 index = self.items.length - 1;
@@ -259,11 +264,8 @@ tagsInput.directive('tagsInput', ["$timeout", "$document", "$window", "tagsInput
                         }
                         $scope.tagList.remove(index);
                     },
-                    clickTag: function(tag) {
-                        if (!$scope.onTagClicked()) {
-                            return;
-                        }
-                        $scope.onTagClicked()(tag);
+                    clickTag: function(index) {
+                      $scope.tagList.click(index);
                     }
                 };
             };
@@ -363,6 +365,7 @@ tagsInput.directive('tagsInput', ["$timeout", "$document", "$window", "tagsInput
                 .on('tag-added', scope.onTagAdded)
                 .on('invalid-tag', scope.onInvalidTag)
                 .on('tag-removed', scope.onTagRemoved)
+                .on('tag-clicked', scope.onTagClicked)
                 .on('tag-added', function() {
                     scope.newTag.setText('');
                 })
@@ -488,7 +491,7 @@ tagsInput.directive('tiTagItem', ["tiUtil", function(tiUtil) {
                 tagsInput.removeTag(scope.$index);
             };
             scope.$clickTag = function() {
-                tagsInput.clickTag(scope.$getDisplayText());
+                tagsInput.clickTag(scope.$index);
             };
 
             scope.$watch('$parent.$index', function(value) {
